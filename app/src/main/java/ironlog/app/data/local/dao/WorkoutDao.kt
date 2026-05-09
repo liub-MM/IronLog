@@ -6,10 +6,10 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import ironlog.app.data.local.database.ExerciseEntity
-import ironlog.app.data.local.database.SetEntity
-import ironlog.app.data.local.database.WorkoutEntity
-import ironlog.app.data.local.database.WorkoutWithDetails
+import ironlog.app.data.local.database.entity.ExerciseEntity
+import ironlog.app.data.local.database.entity.SetEntity
+import ironlog.app.data.local.database.entity.WorkoutEntity
+import ironlog.app.data.local.database.entity.WorkoutWithDetails
 import kotlinx.coroutines.flow.Flow
 
 @Dao

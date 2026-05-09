@@ -1,4 +1,4 @@
-package ironlog.app.data.local.database
+package ironlog.app.data.local.database.entity
 
 import androidx.room.Embedded
 import androidx.room.Relation

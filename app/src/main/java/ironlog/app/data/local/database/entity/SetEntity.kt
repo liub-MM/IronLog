@@ -1,4 +1,4 @@
-package ironlog.app.data.local.database
+package ironlog.app.data.local.database.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -6,20 +6,21 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "exercises",
+    tableName = "sets",
     foreignKeys = [
         ForeignKey(
-            entity = WorkoutEntity::class,
+            entity = ExerciseEntity::class,
             parentColumns = ["id"],
-            childColumns = ["workoutId"],
+            childColumns = ["exerciseId"],
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index("workoutId")]
+    indices = [Index("exerciseId")]
 )
-data class ExerciseEntity(
+data class SetEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val workoutId: Long,
-    val name: String,
-    val targetMuscle: String
+    val exerciseId: Long,
+    val weight: Float,
+    val reps: Int,
+    val setNumber: Int
 )
