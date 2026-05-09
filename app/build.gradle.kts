@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -40,6 +42,19 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+}
+val properties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    properties.load(localPropertiesFile.inputStream())
+}
+val geminiApiKey = properties.getProperty("GEMINI_API_KEY") ?: ""
+
+android {
+    defaultConfig {
+        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
     }
 }
 
@@ -65,12 +80,13 @@ dependencies {
     ksp("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
 
+    implementation("com.google.code.gson:gson:2.11.0")
 
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
     implementation("androidx.paging:paging-compose:3.2.1")
     implementation("androidx.room:room-paging:2.6.1")
 
-    implementation("com.google.ai.client.generativeai:generativeai:0.2.2")
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 
     implementation("com.android.billingclient:billing-ktx:6.2.1")
 
