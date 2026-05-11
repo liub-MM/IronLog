@@ -1,0 +1,61 @@
+package ironlog.app.data.mappers
+
+import ironlog.app.data.local.database.entity.ExerciseEntity
+import ironlog.app.data.local.database.entity.SetEntity
+import ironlog.app.data.local.database.entity.WorkoutWithDetails
+import ironlog.app.data.network.dto.AiExercise
+import ironlog.app.data.network.dto.AiSet
+import ironlog.app.data.network.dto.AiWorkoutResponse
+import ironlog.app.domain.model.Exercise
+import ironlog.app.domain.model.Set
+import ironlog.app.domain.model.Workout
+
+
+//Dto Database
+fun AiExercise.toDbModel(workoutId: Long = 0): ExerciseEntity {
+    return ExerciseEntity(
+        id = 0,
+        workoutId = workoutId,
+        name = this.name,
+        targetMuscle = this.targetMuscle
+    )
+}
+
+
+fun AiSet.toDbModel(exerciseId: Long = 0, setNumber: Int): SetEntity {
+    return SetEntity(
+        id = 0,
+        exerciseId = exerciseId,
+        weight = this.weight,
+        reps = this.reps,
+        setNumber = setNumber
+    )
+}
+
+//Dto Domain
+fun AiWorkoutResponse.toDomainModel(rawInput: String): Workout {
+    return Workout(
+        id = 0,
+        dateTimestamp = System.currentTimeMillis(),
+        rawInputText = rawInput,
+        exercises = this.exercises.map { aiExercise ->
+            Exercise(
+                id = 0,
+                name = aiExercise.name,
+                targetMuscle = aiExercise.targetMuscle,
+                sets = aiExercise.sets.mapIndexed { index, aiSet ->
+                    Set(
+                        id = 0,
+                        weight = aiSet.weight,
+                        reps = aiSet.reps,
+                        setNumber = index + 1
+                    )
+                }
+            )
+        }
+    )
+}
+
+
+//DB Domain
+fun WorkoutWithDetails.toDomain(){}
