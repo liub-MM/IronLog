@@ -9,7 +9,7 @@ import ironlog.app.data.local.database.entity.WorkoutEntity
 import ironlog.app.data.mappers.toDbModel
 import ironlog.app.data.mappers.toDomain
 import ironlog.app.data.network.parser.GeminiWorkoutParser
-import ironlog.app.domain.WorkoutRepository
+import ironlog.app.domain.repository.WorkoutRepository
 import ironlog.app.domain.model.Workout
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
