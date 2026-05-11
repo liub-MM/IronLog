@@ -1,4 +1,4 @@
-package ironlog.app.domain
+package ironlog.app.domain.repository
 
 import androidx.paging.PagingData
 import ironlog.app.domain.model.Workout
