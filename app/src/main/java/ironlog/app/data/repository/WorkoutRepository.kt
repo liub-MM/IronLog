@@ -3,13 +3,16 @@ package ironlog.app.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.map
 import ironlog.app.data.local.dao.WorkoutDao
 import ironlog.app.data.local.database.entity.WorkoutEntity
-import ironlog.app.data.local.database.entity.WorkoutWithDetails
 import ironlog.app.data.mappers.toDbModel
+import ironlog.app.data.mappers.toDomain
 import ironlog.app.data.network.parser.GeminiWorkoutParser
 import ironlog.app.domain.WorkoutRepository
+import ironlog.app.domain.model.Workout
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class WorkoutRepositoryImpl @Inject constructor(
@@ -50,7 +53,7 @@ class WorkoutRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getWorkoutHistory(): Flow<PagingData<WorkoutWithDetails>> {
+    override fun getWorkoutHistory(): Flow<PagingData<Workout>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 20,
@@ -58,11 +61,19 @@ class WorkoutRepositoryImpl @Inject constructor(
                 prefetchDistance = 5
             ),
             pagingSourceFactory = { dao.getPagedWorkoutsHistory() }
-        ).flow
+        ).flow.map {
+            it.map { workoutWithDetails ->
+                workoutWithDetails.toDomain()
+            }
+        }
     }
 
-    override fun getWorkoutsForAnalytics(minTimestamp: Long): Flow<List<WorkoutWithDetails>> {
-        return dao.getWorkoutsForAnalytics(minTimestamp)
+    override fun getWorkoutsForAnalytics(minTimestamp: Long): Flow<List<Workout>> {
+        return dao.getWorkoutsForAnalytics(minTimestamp).map {
+            it.map { workoutWithDetails ->
+                workoutWithDetails.toDomain()
+            }
+        }
     }
 
     override suspend fun deleteWorkout(workoutId: Long) {

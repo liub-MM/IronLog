@@ -1,7 +1,7 @@
 package ironlog.app.domain
 
 import androidx.paging.PagingData
-import ironlog.app.data.local.database.entity.WorkoutWithDetails
+import ironlog.app.domain.model.Workout
 import kotlinx.coroutines.flow.Flow
 
 interface WorkoutRepository {
@@ -9,9 +9,8 @@ interface WorkoutRepository {
 
     suspend fun processAndSaveWorkout(rawText: String): Result<Unit>
 
-    fun getWorkoutHistory(): Flow<PagingData<WorkoutWithDetails>>
+    fun getWorkoutHistory(): Flow<PagingData<Workout>>
 
-    fun getWorkoutsForAnalytics(minTimestamp: Long): Flow<List<WorkoutWithDetails>>
-
+    fun getWorkoutsForAnalytics(minTimestamp: Long): Flow<List<Workout>>
     suspend fun deleteWorkout(workoutId: Long)
 }

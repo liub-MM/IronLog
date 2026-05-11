@@ -58,4 +58,26 @@ fun AiWorkoutResponse.toDomainModel(rawInput: String): Workout {
 
 
 //DB Domain
-fun WorkoutWithDetails.toDomain(){}
+fun WorkoutWithDetails.toDomain(): Workout {
+    return Workout(
+        id = this.workout.id,
+        dateTimestamp = this.workout.dateTimestamp,
+        rawInputText = this.workout.rawInputText,
+        exercises = this.exercises.map { relation ->
+            Exercise(
+                id = relation.exercise.id,
+                name = relation.exercise.name,
+                targetMuscle = relation.exercise.targetMuscle,
+                sets = relation.sets.map { setEntity ->
+                    Set(
+                        id = setEntity.id,
+                        weight = setEntity.weight,
+                        reps = setEntity.reps,
+                        setNumber = setEntity.setNumber
+                    )
+                }
+            )
+        }
+    )
+
+}
