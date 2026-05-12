@@ -27,11 +27,10 @@ fun AppNavHost(
         }
 
         composable<NavRoute.Progress> {
-            Text("Pr")
+
         }
 
         composable<NavRoute.History> {
-            Text("His")
 
         }
 
