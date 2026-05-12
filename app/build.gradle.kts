@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.21"
 }
 
 android {
@@ -87,6 +88,8 @@ dependencies {
     implementation("androidx.room:room-paging:2.6.1")
 
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+
+    implementation("androidx.compose.material:material-icons-extended")
 
     implementation("com.android.billingclient:billing-ktx:6.2.1")
 

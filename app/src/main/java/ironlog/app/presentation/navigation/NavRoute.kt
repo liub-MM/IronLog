@@ -1,0 +1,16 @@
+package ironlog.app.presentation.navigation
+
+import kotlinx.serialization.Serializable
+
+sealed class NavRoute {
+    @Serializable
+    object Home : NavRoute()
+
+    @Serializable
+    object Progress : NavRoute()
+
+    @Serializable
+    object History : NavRoute()
+
+
+}
