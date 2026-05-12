@@ -20,18 +20,9 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun ProgressScreen(
-    onHomeButtonClick: () -> Unit,
-    onProgressButtonClick: () -> Unit,
-    onHistoryButtonClick: () -> Unit
-) {
+    ) {
     Scaffold(
-        bottomBar = {
-            IronLogBottomNavigation(
-                onHomeButtonClick = onHomeButtonClick,
-                onProgressButtonClick = onProgressButtonClick,
-                onHistoryButtonClick = onHistoryButtonClick
-            )
-        },
+
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Column(

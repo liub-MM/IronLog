@@ -19,24 +19,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ironlog.app.presentation.navigation.IronLogBottomNavigation
 
 @Composable
-fun MainScreen(
-    onHomeButtonClick:()->Unit,
-    onProgressButtonClick:()->Unit,
-    onHistoryButtonClick:()->Unit,
-) {
+fun MainScreen() {
     var workoutText by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
 
     Scaffold(
-        bottomBar = {
-            IronLogBottomNavigation(
-                onHomeButtonClick = onHomeButtonClick,
-                onProgressButtonClick = onProgressButtonClick,
-                onHistoryButtonClick = onHistoryButtonClick
-            )
-        },
+
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Column(
@@ -155,40 +146,5 @@ fun MainScreen(
                 }
             }
         }
-    }
-}
-@Composable
-fun IronLogBottomNavigation(
-    onHomeButtonClick:()->Unit,
-    onProgressButtonClick:()->Unit,
-    onHistoryButtonClick:()->Unit,
-) {
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.surface
-    ) {
-        NavigationBarItem(
-            selected = true,
-            onClick = {
-                onHomeButtonClick()
-            },
-            icon = { Icon(Icons.Default.FitnessCenter, contentDescription = "Головна") },
-            label = { Text("Тренування") }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = {
-                onHistoryButtonClick()
-            },
-            icon = { Icon(Icons.Default.History, contentDescription = "Історія") },
-            label = { Text("Історія") }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = {
-                onProgressButtonClick()
-            },
-            icon = { Icon(Icons.Default.Analytics, contentDescription = "Прогрес") },
-            label = { Text("Прогрес") }
-        )
     }
 }
