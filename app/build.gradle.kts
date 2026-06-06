@@ -63,7 +63,7 @@ dependencies {
     val nav_version = "2.9.8"
     val room_version = "2.8.4"
 
-
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
