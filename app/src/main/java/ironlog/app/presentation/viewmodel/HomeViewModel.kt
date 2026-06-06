@@ -32,21 +32,17 @@ class HomeViewModel @Inject constructor(
     fun proccessWorkout() {
         _isLoading.value = true
         viewModelScope.launch {
-            val workout = processAndSaveWorkoutUseCase
-                .invoke(_workoutText.value)
+            val workout = processAndSaveWorkoutUseCase(_workoutText.value)
+
             if (workout.isSuccess) {
                 _workoutText.value = ""
-                emitValue("Тренування збережено!")
-            } else if (workout.isFailure) {
-                emitValue("Невдалося зберегти тренування")
+                _uiEvent.emit("Тренування збережено!")
+            } else {
+                _uiEvent.emit("Не вдалося: опишіть вправи детальніше️")
             }
+
+             _isLoading.value = false
         }
-    }
-
-    private suspend fun emitValue(value: String) {
-        _uiEvent.emit(value)
-        _isLoading.value = false
-
     }
 
 }
