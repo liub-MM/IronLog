@@ -53,7 +53,10 @@ fun AppNavHost(
             composable<NavRoute.WorkoutDetails> { backStackEntry ->
                 val route = backStackEntry.toRoute<NavRoute.WorkoutDetails>()
 
-                WorkoutDetailsScreen(workoutId = route.workoutId)
+                WorkoutDetailsScreen(
+                    onBackClick = { navController.popBackStack() },
+                    workoutId = route.workoutId
+                )
             }
 
             composable<NavRoute.History> {
