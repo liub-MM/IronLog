@@ -46,7 +46,7 @@ interface WorkoutDao {
     suspend fun insertFullWorkout(
         workout: WorkoutEntity,
         exercisesWithSets: List<Pair<ExerciseEntity, List<SetEntity>>>
-    ) {
+    ): Long {
         val workoutId = insertWorkout(workout)
 
         exercisesWithSets.forEach { (exercise, sets) ->
@@ -55,5 +55,6 @@ interface WorkoutDao {
             val setsWithIds = sets.map { it.copy(exerciseId = exerciseId) }
             insertSets(setsWithIds)
         }
+        return workoutId
     }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ironlog.app.domain.usecases.ProcessAndSaveWorkoutUseCase
+import ironlog.app.domain.usecases.SyncWorkoutToCloudUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val processAndSaveWorkoutUseCase: ProcessAndSaveWorkoutUseCase
+    private val processAndSaveWorkoutUseCase: ProcessAndSaveWorkoutUseCase,
+    private val syncWorkoutToCloudUseCase: SyncWorkoutToCloudUseCase,
 ) : ViewModel() {
 
     private val _workoutText = MutableStateFlow("")
@@ -32,16 +34,16 @@ class HomeViewModel @Inject constructor(
     fun proccessWorkout() {
         _isLoading.value = true
         viewModelScope.launch {
-            val workout = processAndSaveWorkoutUseCase(_workoutText.value)
+            val result = processAndSaveWorkoutUseCase(_workoutText.value)
 
-            if (workout.isSuccess) {
+            result.onSuccess {
                 _workoutText.value = ""
                 _uiEvent.emit("Тренування збережено!")
-            } else {
+            }.onFailure {
                 _uiEvent.emit("Не вдалося: опишіть вправи детальніше️")
             }
 
-             _isLoading.value = false
+            _isLoading.value = false
         }
     }
 

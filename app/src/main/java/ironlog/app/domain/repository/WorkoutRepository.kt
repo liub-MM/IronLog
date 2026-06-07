@@ -7,8 +7,10 @@ import kotlinx.coroutines.flow.Flow
 interface WorkoutRepository {
 
 
+    suspend fun syncWorkoutToCloud(workout: Workout): Result<Unit>
+
     fun getWorkoutById(id:Long): Flow<Workout?>
-    suspend fun processAndSaveWorkout(rawText: String): Result<Unit>
+    suspend fun processAndSaveWorkout(rawText: String): Result<Workout>
 
     fun getWorkoutHistory(): Flow<PagingData<Workout>>
 
