@@ -1,29 +1,11 @@
 package ironlog.app.presentation.screen
-
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,10 +13,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.collectAsLazyPagingItems
+import ironlog.app.presentation.viewmodel.HistoryViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun HistoryScreen(
-   ) {
+    viewModel: HistoryViewModel = hiltViewModel()
+) {
+    val historyItems = viewModel.pagedWorkouts.collectAsLazyPagingItems()
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
@@ -58,18 +49,37 @@ fun HistoryScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(bottom = 24.dp)
             ) {
-                items(5) { index ->
-                    WorkoutHistoryCard(
-                        date = "1${index} травня 2026",
-                        summary = "Жим лежачи, Розведення гантелей, Прес",
-                        tonnage = "${3400 - (index * 200)} кг"
-                    )
+
+                items(historyItems.itemCount) { index ->
+                    val workout = historyItems[index]
+
+                    if (workout != null) {
+
+                        val dateFormat = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale("uk", "UA"))
+                        val dateString = dateFormat.format(Date(workout.dateTimestamp))
+
+                        val summary = workout.exercises.joinToString(", ") { it.name }
+
+                        val finalSummary = if (summary.isNotEmpty()) summary else "Порожнє тренування"
+
+                        var totalTonnage = 0.0f
+                        for (exercise in workout.exercises) {
+                            for (set in exercise.sets) {
+                                totalTonnage += (set.weight * set.reps)
+                            }
+                        }
+
+                        WorkoutHistoryCard(
+                            date = dateString,
+                            summary = finalSummary,
+                            tonnage = "${totalTonnage.toInt()} кг"
+                        )
+                    }
                 }
             }
         }
     }
 }
-
 @Composable
 fun WorkoutHistoryCard(date: String, summary: String, tonnage: String) {
     ElevatedCard(
@@ -85,7 +95,7 @@ fun WorkoutHistoryCard(date: String, summary: String, tonnage: String) {
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-             Surface(
+            Surface(
                 shape = RoundedCornerShape(12.dp),
                 color = MaterialTheme.colorScheme.primaryContainer,
                 modifier = Modifier.size(48.dp)
@@ -122,7 +132,7 @@ fun WorkoutHistoryCard(date: String, summary: String, tonnage: String) {
                 )
             }
 
-            IconButton(onClick = { /* TODO: Видалити/Редагувати */ }) {
+            IconButton(onClick = {  }) {
                 Icon(Icons.Default.MoreVert, contentDescription = "Меню", tint = Color.Gray)
             }
         }

@@ -10,6 +10,8 @@ import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,12 +19,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import ironlog.app.presentation.viewmodel.HistoryViewModel
+import ironlog.app.presentation.viewmodel.ProgressViewModel
 
 @Composable
 fun ProgressScreen(
-    ) {
-    Scaffold(
+    viewModel: ProgressViewModel = hiltViewModel()
+) {
 
+    val progressState by viewModel.progressState.collectAsState()
+    Scaffold(
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Column(
@@ -78,16 +85,16 @@ fun ProgressScreen(
                 StatCard(
                     modifier = Modifier.weight(1f),
                     title = "Тренувань",
-                    value = "14",
+                    value = progressState.totalWorkouts.toString(),
                     subtitle = "цього місяця",
                     icon = Icons.Default.LocalFireDepartment,
-                    iconTint = Color(0xFFFFA500) // Оранжевий
+                    iconTint = Color(0xFFFFA500)
                 )
 
                 StatCard(
                     modifier = Modifier.weight(1f),
                     title = "Улюблена база",
-                    value = "Груди",
+                    value = progressState.favoriteMuscle,
                     subtitle = "40% від усього",
                     icon = Icons.Default.FitnessCenter,
                     iconTint = MaterialTheme.colorScheme.primary

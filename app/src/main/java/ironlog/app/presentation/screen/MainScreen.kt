@@ -1,33 +1,70 @@
 package ironlog.app.presentation.screen
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.AutoAwesome
-import androidx.compose.material.icons.filled.FitnessCenter
-import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Mic
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ironlog.app.presentation.navigation.IronLogBottomNavigation
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import ironlog.app.presentation.viewmodel.HomeViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun MainScreen() {
-    var workoutText by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
+fun MainScreen(
+    viewModel: HomeViewModel = hiltViewModel()
+) {
+    val workoutText by viewModel.workoutText.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
+
+    LaunchedEffect(Unit) {
+        viewModel.uiEvent.collectLatest { message ->
+            snackbarHostState.showSnackbar(message = message)
+        }
+    }
     Scaffold(
-
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Column(
@@ -38,19 +75,19 @@ fun MainScreen() {
         ) {
 
             Text(
-                text = "Привіт! \uD83E\uDDBE",
+                text = "Iron Log \uD83E\uDDBE",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "Вівторок, 12 травня",
+                text = "Сьогодні",
                 fontSize = 14.sp,
                 color = Color.Gray,
                 modifier = Modifier.padding(top = 4.dp, bottom = 24.dp)
             )
 
-             ElevatedCard(
+            ElevatedCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .animateContentSize(),
@@ -63,7 +100,7 @@ fun MainScreen() {
                 Column(modifier = Modifier.padding(16.dp)) {
                     TextField(
                         value = workoutText,
-                        onValueChange = { workoutText = it },
+                        onValueChange = { viewModel.onTextChanged(it) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .defaultMinSize(minHeight = 120.dp),
@@ -89,7 +126,7 @@ fun MainScreen() {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        IconButton(onClick = { /* TODO: Голосовий ввід */ }) {
+                        IconButton(onClick = {  }) {
                             Icon(
                                 imageVector = Icons.Default.Mic,
                                 contentDescription = "Голосовий ввід",
@@ -100,9 +137,7 @@ fun MainScreen() {
 
                         Button(
                             onClick = {
-                                if (workoutText.isNotBlank()) {
-                                    isLoading = true
-                                }
+                                viewModel.proccessWorkout()
                             },
                             enabled = !isLoading && workoutText.isNotBlank(),
                             shape = RoundedCornerShape(12.dp)
@@ -140,7 +175,7 @@ fun MainScreen() {
             ) {
                 items(chips) { chipText ->
                     SuggestionChip(
-                        onClick = { workoutText = chipText },
+                        onClick = { viewModel.onTextChanged(chipText) },
                         label = { Text(chipText) }
                     )
                 }
