@@ -1,6 +1,7 @@
 package ironlog.app.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,9 +15,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,6 +29,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -80,7 +88,7 @@ fun HistoryScreen(
                         val summary = workout.exercises.joinToString(", ") { it.name }
 
                         val finalSummary =
-                            if (summary.isNotEmpty()) summary else "Порожнє тренування"
+                            summary.ifEmpty { "Порожнє тренування" }
 
                         var totalTonnage = 0.0f
                         for (exercise in workout.exercises) {
@@ -93,7 +101,8 @@ fun HistoryScreen(
                             date = dateString,
                             summary = finalSummary,
                             tonnage = "${totalTonnage.toInt()} кг",
-                            onClick = {onWorkoutClick(workout.id)}
+                            onClick = { onWorkoutClick(workout.id) },
+                            onDeleteClick = {viewModel.deleteWorkout(workout.id )}
                         )
                     }
                 }
@@ -108,7 +117,11 @@ fun WorkoutHistoryCard(
     summary: String,
     tonnage: String,
     onClick: () -> Unit,
+    onDeleteClick: () -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
+
     ElevatedCard(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
@@ -160,8 +173,30 @@ fun WorkoutHistoryCard(
                 )
             }
 
-            IconButton(onClick = { }) {
-                Icon(Icons.Default.MoreVert, contentDescription = "Меню", tint = Color.Gray)
+            Box {
+                IconButton(onClick = { expanded = true }) {
+                    Icon(Icons.Default.MoreVert, contentDescription = "Меню", tint = Color.Gray)
+                }
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Видалити", color = MaterialTheme.colorScheme.error) },
+                        onClick = {
+                            expanded = false
+                            onDeleteClick()
+                        },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Default.Delete,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    )
+                }
             }
         }
     }
