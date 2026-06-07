@@ -7,7 +7,7 @@
 ![Clean Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-success)
 ![Gemini AI](https://img.shields.io/badge/AI-Google%20Gemini-orange)
 
-## 🌟 Головні фічі
+## Основні можливості
 
 * **AI-Аналіз тренувань:** Введення тексту вільним форматом (напр. *"Жим лежачи 100кг 8х3"*), який Gemini автоматично парсить у структурований JSON.
 * **Нескінченна історія (Paging 3):** Плавне підвантаження історії тренувань з локальної бази даних.
@@ -19,7 +19,7 @@
 | :---: | :---: | :---: |
 | <img src="screenshots/screenshot_home.png" width="250"/> | <img src="screenshots/screenshot_history.png" width="250"/> | <img src="screenshots/screenshot_progress.png" width="250"/> |
 
-## 🛠 Технологічний стек
+##  Технологічний стек
 
 Додаток побудований з використанням сучасних інструментів Android розробки:
 
