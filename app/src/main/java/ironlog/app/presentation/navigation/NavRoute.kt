@@ -7,6 +7,8 @@ sealed class NavRoute {
     object Home : NavRoute()
 
     @Serializable
+    data object Splash : NavRoute()
+    @Serializable
     object Progress : NavRoute()
 
     @Serializable

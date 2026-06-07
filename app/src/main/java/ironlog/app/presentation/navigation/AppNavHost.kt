@@ -24,6 +24,7 @@ import androidx.navigation.toRoute
 import ironlog.app.presentation.screen.HistoryScreen
 import ironlog.app.presentation.screen.MainScreen
 import ironlog.app.presentation.screen.ProgressScreen
+import ironlog.app.presentation.screen.SplashScreen
 import ironlog.app.presentation.screen.WorkoutDetailsScreen
 
 @Composable
@@ -31,15 +32,22 @@ fun AppNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+    val isSplashScreen = currentDestination?.hasRoute<NavRoute.Splash>() == true
+
     Scaffold(
         bottomBar = {
-            IronLogBottomNavigation(navController = navController)
+            if (!isSplashScreen) {
+                IronLogBottomNavigation(navController = navController)
+            }
         }
     ) { innerPadding ->
 
         NavHost(
             navController = navController,
-            startDestination = NavRoute.Home,
+            startDestination = NavRoute.Splash,
             modifier = modifier.padding(innerPadding),
         ) {
             composable<NavRoute.Home> {
@@ -56,6 +64,15 @@ fun AppNavHost(
                 WorkoutDetailsScreen(
                     onBackClick = { navController.popBackStack() },
                     workoutId = route.workoutId
+                )
+            }
+            composable<NavRoute.Splash> {
+                SplashScreen(
+                    onNavigateToHome = {
+                        navController.navigate(NavRoute.Home) {
+                            popUpTo(NavRoute.Splash) { inclusive = true }
+                        }
+                    }
                 )
             }
 
