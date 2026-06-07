@@ -12,5 +12,6 @@ sealed class NavRoute {
     @Serializable
     object History : NavRoute()
 
-
+    @Serializable
+    data class WorkoutDetails(val workoutId: Long) : NavRoute()
 }

@@ -1,11 +1,29 @@
 package ironlog.app.presentation.screen
-import androidx.compose.foundation.layout.*
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.*
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +40,7 @@ import java.util.Locale
 
 @Composable
 fun HistoryScreen(
+    onWorkoutClick: (Long) -> Unit,
     viewModel: HistoryViewModel = hiltViewModel()
 ) {
     val historyItems = viewModel.pagedWorkouts.collectAsLazyPagingItems()
@@ -60,7 +79,8 @@ fun HistoryScreen(
 
                         val summary = workout.exercises.joinToString(", ") { it.name }
 
-                        val finalSummary = if (summary.isNotEmpty()) summary else "Порожнє тренування"
+                        val finalSummary =
+                            if (summary.isNotEmpty()) summary else "Порожнє тренування"
 
                         var totalTonnage = 0.0f
                         for (exercise in workout.exercises) {
@@ -72,7 +92,8 @@ fun HistoryScreen(
                         WorkoutHistoryCard(
                             date = dateString,
                             summary = finalSummary,
-                            tonnage = "${totalTonnage.toInt()} кг"
+                            tonnage = "${totalTonnage.toInt()} кг",
+                            onClick = {onWorkoutClick(workout.id)}
                         )
                     }
                 }
@@ -80,9 +101,16 @@ fun HistoryScreen(
         }
     }
 }
+
 @Composable
-fun WorkoutHistoryCard(date: String, summary: String, tonnage: String) {
+fun WorkoutHistoryCard(
+    date: String,
+    summary: String,
+    tonnage: String,
+    onClick: () -> Unit,
+) {
     ElevatedCard(
+        onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.elevatedCardColors(
@@ -132,7 +160,7 @@ fun WorkoutHistoryCard(date: String, summary: String, tonnage: String) {
                 )
             }
 
-            IconButton(onClick = {  }) {
+            IconButton(onClick = { }) {
                 Icon(Icons.Default.MoreVert, contentDescription = "Меню", tint = Color.Gray)
             }
         }
