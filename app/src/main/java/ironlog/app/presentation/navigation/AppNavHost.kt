@@ -22,6 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.toRoute
 import ironlog.app.presentation.screen.HistoryScreen
+import ironlog.app.presentation.screen.LoginScreen
 import ironlog.app.presentation.screen.MainScreen
 import ironlog.app.presentation.screen.ProgressScreen
 import ironlog.app.presentation.screen.SplashScreen
@@ -36,10 +37,12 @@ fun AppNavHost(
     val currentDestination = navBackStackEntry?.destination
 
     val isSplashScreen = currentDestination?.hasRoute<NavRoute.Splash>() == true
+    val isLoginScreen = currentDestination?.hasRoute<NavRoute.Login>() == true
+    val showBottomBar = !isSplashScreen && !isLoginScreen
 
     Scaffold(
         bottomBar = {
-            if (!isSplashScreen) {
+            if (showBottomBar) {
                 IronLogBottomNavigation(navController = navController)
             }
         }
@@ -66,10 +69,26 @@ fun AppNavHost(
                     workoutId = route.workoutId
                 )
             }
+
+            composable<NavRoute.Login> {
+                LoginScreen(
+                    onAuthSuccess = {
+                        navController.navigate(NavRoute.Home) {
+                            popUpTo(NavRoute.Login) { inclusive = true }
+                        }
+                    },
+                )
+            }
+
             composable<NavRoute.Splash> {
                 SplashScreen(
                     onNavigateToHome = {
                         navController.navigate(NavRoute.Home) {
+                            popUpTo(NavRoute.Splash) { inclusive = true }
+                        }
+                    },
+                    onNavigateToLogin = {
+                        navController.navigate(NavRoute.Login) {
                             popUpTo(NavRoute.Splash) { inclusive = true }
                         }
                     }
