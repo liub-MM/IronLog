@@ -37,8 +37,7 @@
 
 1. Зклонуй репозиторій:
    ```bash
-   git clone [https://github.com/ТВІЙ_НІКНЕЙМ/IronLog.git](https://github.com/ТВІЙ_НІКНЕЙМ/IronLog.git)
-   Відкрий проект у Android Studio (рекомендується остання версія).
+   git clone [https://github.com/liub-MM/IronLog.git](https://github.com/ТВІЙ_НІКНЕЙМ/IronLog.git)
 
 2. Отримай безкоштовний API ключ для Gemini на Google AI Studio.
 
