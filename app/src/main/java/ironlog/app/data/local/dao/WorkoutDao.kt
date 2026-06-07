@@ -21,6 +21,10 @@ interface WorkoutDao {
     fun getPagedWorkoutsHistory(): PagingSource<Int, WorkoutWithDetails>
 
     @Transaction
+    @Query("SELECT * FROM workouts WHERE id = :id")
+    fun getWorkoutById(id: Long): Flow<WorkoutWithDetails?>
+
+    @Transaction
     @Query("SELECT * FROM workouts WHERE dateTimestamp >= :minDateTimestamp ORDER BY dateTimestamp ASC")
     fun getWorkoutsForAnalytics(minDateTimestamp: Long): Flow<List<WorkoutWithDetails>>
 

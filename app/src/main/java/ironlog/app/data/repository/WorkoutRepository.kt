@@ -9,8 +9,8 @@ import ironlog.app.data.local.database.entity.WorkoutEntity
 import ironlog.app.data.mappers.toDbModel
 import ironlog.app.data.mappers.toDomain
 import ironlog.app.data.network.parser.GeminiWorkoutParser
-import ironlog.app.domain.repository.WorkoutRepository
 import ironlog.app.domain.model.Workout
+import ironlog.app.domain.repository.WorkoutRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -20,6 +20,12 @@ class WorkoutRepositoryImpl @Inject constructor(
     private val dao: WorkoutDao
 ) : WorkoutRepository {
 
+
+    override fun getWorkoutById(id: Long): Flow<Workout?> {
+        return dao.getWorkoutById(id).map {
+            it?.toDomain()
+        }
+    }
 
     override suspend fun processAndSaveWorkout(rawText: String): Result<Unit> {
         val result = geminiWorkoutParser.parseWorkoutText(rawText)

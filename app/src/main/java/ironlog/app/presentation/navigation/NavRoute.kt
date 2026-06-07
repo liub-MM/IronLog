@@ -7,10 +7,13 @@ sealed class NavRoute {
     object Home : NavRoute()
 
     @Serializable
+    data object Splash : NavRoute()
+    @Serializable
     object Progress : NavRoute()
 
     @Serializable
     object History : NavRoute()
 
-
+    @Serializable
+    data class WorkoutDetails(val workoutId: Long) : NavRoute()
 }
